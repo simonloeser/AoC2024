@@ -1,0 +1,32 @@
+import * as fs from 'fs';
+
+function calculateTotalDistance(leftList: number[], rightList: number[]): number {
+  leftList.sort((a, b) => a - b);
+  rightList.sort((a, b) => a - b);
+
+  let totalDistance = 0;
+  for (let i = 0; i < leftList.length; i++) {
+    totalDistance += Math.abs(leftList[i] - rightList[i]);
+  }
+  return totalDistance;
+}
+
+function readFileToList(filePath: string): { leftList: number[], rightList: number[] } {
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const lines = fileContent.trim().split('\n');
+
+    const leftList: number[] = [];
+    const rightList: number[] = [];
+
+    for (const line of lines) {
+        const [left, right] = line.split(/\s+/).map(Number);
+        leftList.push(left);
+        rightList.push(right);
+    }
+    return { leftList, rightList };
+}
+
+const filePath = 'day01.txt';
+const { leftList, rightList } = readFileToList(filePath);
+const totalDistance = calculateTotalDistance(leftList, rightList);
+console.log(`The total distance is: ${totalDistance}`);
