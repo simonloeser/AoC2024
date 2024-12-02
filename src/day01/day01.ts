@@ -14,7 +14,6 @@ function calculateTotalDistance(leftList: number[], rightList: number[]): number
 function readFileToList(filePath: string): { leftList: number[], rightList: number[] } {
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const lines = fileContent.trim().split('\n');
-
     const leftList: number[] = [];
     const rightList: number[] = [];
 
@@ -26,7 +25,27 @@ function readFileToList(filePath: string): { leftList: number[], rightList: numb
     return { leftList, rightList };
 }
 
+function calculateSimilarityScore(leftList: number[], rightList: number[]): number {
+    const frequencyMap = new Map<number, number>();
+
+    for (const num of rightList) {
+        frequencyMap.set(num, (frequencyMap.get(num) || 0) + 1);
+    }
+
+    let similarityScore = 0;
+    for (const num of leftList) {
+        const count = frequencyMap.get(num) || 0;
+        similarityScore += num * count;
+    }
+
+    return similarityScore;
+}
+
 const filePath = 'day01.txt';
 const { leftList, rightList } = readFileToList(filePath);
+
 const totalDistance = calculateTotalDistance(leftList, rightList);
-console.log(`The total distance is: ${totalDistance}`);
+console.log(`[PART 01] The total distance is: ${totalDistance}`);
+
+const similarityScore = calculateSimilarityScore(leftList, rightList);
+console.log(`[PART 02] The similarity score is: ${similarityScore}`)
